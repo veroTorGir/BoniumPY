@@ -80,4 +80,51 @@ print("Bonos por precio:")
 print(agrupar_bonos_por_precio(bonos_limpios).to_string(index=False))
 
 
+# ── PRODUCTO ──────────────────────────────────────────────
+from utils.producto.simulacion_producto import generar_simulacion_productos
+from utils.producto.limpiar_producto import limpiar_productos
+from utils.producto.descripcion_producto import describir_productos
+from utils.producto.query_producto import (
+    obtener_productos_activos,
+    obtener_productos_por_tipo,
+    obtener_productos_por_precio,
+)
+from utils.producto.groupby_producto import (
+    calcular_promedio_precio_por_tipo,
+    contar_productos_por_estado,
+)
+
+# HU3 — Simulación: +2000 productos
+productos_sucios = generar_simulacion_productos(2000)
+data_frame_sucio = pd.DataFrame(productos_sucios)
+
+# HU1 — Limpieza
+data_frame_limpio = limpiar_productos(data_frame_sucio)
+
+# HU2 — Exploración / Descripción
+print("=== DESCRIPCIÓN PRODUCTO ===\n")
+describir_productos(data_frame_limpio)
+
+# HU4 — Query
+print("\n=== QUERIES PRODUCTO ===\n")
+activos = obtener_productos_activos(data_frame_limpio)
+print(f"Productos activos: {len(activos)}\n")
+
+tipo_ejemplo = data_frame_limpio["tipo"].dropna().iloc[0]
+print(f"Productos del tipo '{tipo_ejemplo}':")
+print(obtener_productos_por_tipo(data_frame_limpio, tipo_ejemplo).to_string(index=False))
+print()
+
+print("Productos con precio entre 5000 y 20000:")
+print(obtener_productos_por_precio(data_frame_limpio, 5000, 20000).to_string(index=False))
+print()
+
+# HU5 — GroupBy
+print("=== GROUPBY PRODUCTO ===\n")
+print("Promedio de precios por tipo:")
+print(calcular_promedio_precio_por_tipo(data_frame_limpio).to_string(index=False))
+print()
+print("Conteo de productos por estado:")
+print(contar_productos_por_estado(data_frame_limpio).to_string(index=False))
+print()
 
